@@ -21,7 +21,7 @@ export default function Header() {
             >
               <path d="M96 0V47L48 94H0V47L48 0H96Z" />
             </svg>
-            eCommerce
+            Dhanani
           </a>
           <Navbar />
           <div className="flex sm:border-l border-r divide-x">
