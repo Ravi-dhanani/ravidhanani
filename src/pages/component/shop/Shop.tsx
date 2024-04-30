@@ -1,30 +1,53 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import LstOfProduct from "./LstOfProduct";
+import { useEffect, useState } from "react";
+import TempProducts from "./ProductRow";
+import ProductRow from "./ProductRow";
+// export interface ITempProduct {
+//   category: string;
+//   description: string;
+//   id: number;
+//   image: string;
+//   rating: {
+//     count: number;
+//     rate: number;
+//   };
+//   price: string;
+//   title: string;
+// }
 export interface IProducts {
-  brand: string;
-  category: string;
-  description: string;
-  discountPercentage: number;
-  id: number;
-  images: [string];
-  price: number;
-  rating: number;
-  stock: number;
-  thumbnail: string;
+  _id: string;
   title: string;
+  description: string;
+  category: string;
+  size: [
+    {
+      _id: string;
+      sizeName: string;
+    }
+  ];
+  images: any;
+  price: number;
+  color: [
+    {
+      _id: string;
+      colorName: string;
+      colorCode: string;
+    }
+  ];
+  slug: string;
+  subCategory: string;
 }
 export default function Shop() {
-  const [lstProduct, setLstProduct] = useState<any>();
-  function getData() {
-    fetch("https://dummyjson.com/products")
-      .then((response) => response.json())
-      .then((res) => setLstProduct(res.products));
+  const [lstProducts, setLstProducts] = useState<any>(null);
+  async function getAllProducts() {
+    fetch("https://ecommerce-rest-api-y2lw.onrender.com/api/getProduct")
+      .then((res) => res.json())
+      .then((json) => setLstProducts(json.data));
   }
   useEffect(() => {
-    getData();
+    getAllProducts();
   }, []);
-  if (!lstProduct) {
+  if (!lstProducts) {
     return (
       <div className="text-center bg-white flex justify-center">
         <img
@@ -36,17 +59,12 @@ export default function Shop() {
   }
   return (
     <div>
-      <div className="bg-white py-6 sm:py-8 lg:py-12">
-        <div className="flex mx-auto max-w-screen-2xl px-4 md:px-8">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {lstProduct &&
-              lstProduct.map((item: IProducts, index: number) => (
-                <div key={index}>
-                  <LstOfProduct objItem={item} />
-                </div>
-              ))}
+      <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4 grid-cols-2 sm:mt-10 mt-2 mx-2 md:mx-[15px] ">
+        {lstProducts?.map((item: IProducts, index: number) => (
+          <div key={index}>
+            <ProductRow item={item} />
           </div>
-        </div>
+        ))}
       </div>
     </div>
   );
