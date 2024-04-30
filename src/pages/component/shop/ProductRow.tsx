@@ -91,9 +91,9 @@ export default function ProductRow(props: IProductRowProps) {
             overflow: "hidden",
           }}
         >
-          <Link href={`/detail/${item.slug}`}>
+          <Link href={`/detail/${item?.slug}`}>
             <p className=" truncate text-lg overflow-hidden indent-2   font-normal hover:underline  cursor-pointer">
-              {item.title}
+              {item?.title}
             </p>
           </Link>
         </div>
@@ -101,7 +101,7 @@ export default function ProductRow(props: IProductRowProps) {
           <span className="text-lg line-through text-gray-500">
             Rs. {item.price * 2}
           </span>
-          <span className="text-lg text-gra">Rs. {item.price}</span>
+          <span className="text-lg text-gra">Rs. {item?.price}</span>
         </div>
       </div>
     </div>

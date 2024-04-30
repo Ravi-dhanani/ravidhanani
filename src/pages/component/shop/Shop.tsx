@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import TempProducts from "./ProductRow";
 import ProductRow from "./ProductRow";
 // export interface ITempProduct {
 //   category: string;
