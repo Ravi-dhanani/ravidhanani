@@ -9,7 +9,7 @@ export default function ProductWishlist(props: IProductWishlistProps) {
   return (
     <div>
       <div className=" bg-green-700 rounded-full">
-        {isLike === item.id || isLike !== 0 ? (
+        {isLike === item?.id || isLike !== 0 ? (
           <div className="sm:p-[9px] p-[4px] items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +36,7 @@ export default function ProductWishlist(props: IProductWishlistProps) {
               strokeWidth="1.5"
               stroke="white"
               className="sm:w-6 sm:h-6 h-5 w-5"
-              onClick={() => setIsLike(item.id)}
+              onClick={() => setIsLike(item?.id)}
             >
               <path
                 strokeLinecap="round"

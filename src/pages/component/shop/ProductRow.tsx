@@ -99,7 +99,7 @@ export default function ProductRow(props: IProductRowProps) {
         </div>
         <div className="grid grid-cols-[auto_auto] justify-center mt-2 gap-x-2">
           <span className="text-lg line-through text-gray-500">
-            Rs. {item.price * 2}
+            Rs. {item?.price * 2}
           </span>
           <span className="text-lg text-gra">Rs. {item?.price}</span>
         </div>
