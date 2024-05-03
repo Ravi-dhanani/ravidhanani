@@ -5,15 +5,15 @@ export default function ProductSizeVariant(props: any) {
   return (
     <div>
       {props.size && (
-        <div className="mt-2 items-center pb-5 flex ">
+        <div className="mt-2  items-center pb-5  ">
           <div className="mb-2">
-            <p className="md:font-medium md:text-base font-medium text-sm">
+            <p className="md:font-bold md:text-base font-bold text-base">
               SIZE:
             </p>
           </div>
 
           <div>
-            <div className="flex gap-x-2 ml-3">
+            <div className="flex gap-x-2 ">
               {props.size &&
                 props.size?.map((item: any, index: number) => (
                   <div

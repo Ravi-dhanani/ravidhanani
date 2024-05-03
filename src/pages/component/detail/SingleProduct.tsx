@@ -1,8 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Disclosure, RadioGroup, Tab } from "@headlessui/react";
+import { Disclosure, Tab } from "@headlessui/react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { HeartIcon, MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
 import ProductColorVariant from "./ProductColorVariant";
 import ProductSizeVariant from "./ProductSizeVariant";
 
@@ -54,8 +54,10 @@ const product = {
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
-
-export default function SingleProduct(props: any) {
+interface ISingleProductsProps {
+  slug: string;
+}
+export default function SingleProduct(props: ISingleProductsProps) {
   const [productDetails, setProductDetails] = useState<any>();
   const [selectedColor, setSelectedColor] = useState(
     productDetails?.color[0]?.colorName

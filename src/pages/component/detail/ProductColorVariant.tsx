@@ -13,8 +13,8 @@ export default function ProductColorVariant(props: any) {
             <div
               className={
                 color === index
-                  ? `h-14 w-14 object-cover rounded-full border-2 border-green-700  p-[2px] hover:cursor-pointer`
-                  : `h-14 w-14 object-cover rounded-full border-2 border-gray-200 p-[2px] hover:cursor-pointer`
+                  ? `h-10 w-10 object-cover rounded-full border-2 border-green-700  p-[2px] hover:cursor-pointer`
+                  : `h-10 w-10 object-cover rounded-full border-2 border-gray-200 p-[2px] hover:cursor-pointer`
               }
               onClick={() => setColor(index)}
               style={{ background: `${item.colorName}` }}

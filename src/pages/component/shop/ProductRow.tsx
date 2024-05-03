@@ -3,11 +3,14 @@ import { useState } from "react";
 import ProductDiscount from "./ProductDiscount";
 import ProductWishlist from "./ProductWishlist";
 import { IProducts } from "./Shop";
+import Model from "../detail/Model";
 interface IProductRowProps {
   item: IProducts;
 }
 export default function ProductRow(props: IProductRowProps) {
   const [isLike, setIsLike] = useState<number>(0);
+  const [openModel, setOpenModel] = useState<boolean>(false);
+  const [slug, setSlug] = useState("");
   const { item } = props;
 
   return (
@@ -32,7 +35,13 @@ export default function ProductRow(props: IProductRowProps) {
           />
         </div>
         <div className="hidden sm:block opacity-0 group-hover:opacity-100 duration-300 absolute bottom-0  h-10 w-full bg-green-700">
-          <div className="my-2 flex justify-center cursor-pointer">
+          <div
+            className="my-2 flex justify-center cursor-pointer"
+            onClick={async () => {
+              await setSlug(item.slug);
+              await setOpenModel(true);
+            }}
+          >
             <span className="text-center uppercase text-white ">
               View Products
             </span>
@@ -104,6 +113,9 @@ export default function ProductRow(props: IProductRowProps) {
           <span className="text-lg text-gra">Rs. {item?.price}</span>
         </div>
       </div>
+      {openModel && (
+        <Model open={openModel} setOpen={setOpenModel} slug={slug} />
+      )}
     </div>
   );
 }

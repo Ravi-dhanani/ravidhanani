@@ -58,7 +58,7 @@ export default function Shop() {
   }
   return (
     <div>
-      <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4 grid-cols-2 sm:mt-10 mt-2 mx-2 md:mx-[15px] ">
+      <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2  gap-4 grid-cols-1 sm:mt-10 mt-2 mx-2 md:mx-[15px] ">
         {lstProducts?.map((item: IProducts, index: number) => (
           <div key={index}>
             <ProductRow item={item} />

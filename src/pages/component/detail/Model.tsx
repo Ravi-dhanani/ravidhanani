@@ -1,7 +1,11 @@
-import { Dialog, RadioGroup, Transition } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { Dialog, Transition } from "@headlessui/react";
 import { StarIcon } from "@heroicons/react/20/solid";
-import React, { Fragment, useState } from "react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
+import { Mousewheel, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import ProductColorVariant from "./ProductColorVariant";
+import ProductSizeVariant from "./ProductSizeVariant";
 
 const product: any = {
   name: "Women's Basic Tee",
@@ -34,16 +38,29 @@ const product: any = {
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
+interface IModelProps {
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  slug: string;
+}
 
-export default function Model() {
-  const [open, setOpen] = useState<any>(false);
-  const [selectedColor, setSelectedColor] = useState<any>(product?.colors[0]);
-  const [selectedSize, setSelectedSize] = useState<any>(product?.sizes[2]);
+export default function Model(props: IModelProps) {
+  const [productDetails, setProductDetails] = useState<any>();
+  function getData() {
+    fetch(
+      `https://ecommerce-rest-api-y2lw.onrender.com/api/getProduct/${props.slug}`
+    )
+      .then((response) => response.json())
+      .then((res) => setProductDetails(res.data));
+  }
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <div>
       <div>
-        <Transition.Root show={open} as={Fragment}>
-          <Dialog as="div" className="relative z-10" onClose={setOpen}>
+        <Transition.Root show={props?.open ? props?.open : false} as={Fragment}>
+          <Dialog as="div" className="relative z-10" onClose={props.setOpen}>
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -58,7 +75,6 @@ export default function Model() {
 
             <div className="fixed inset-0 z-10 overflow-y-auto">
               <div className="flex min-h-full items-stretch justify-center text-center md:items-center md:px-2 lg:px-4">
-                {/* This element is to trick the browser into centering the modal contents. */}
                 <span
                   className="hidden md:inline-block md:h-screen md:align-middle"
                   aria-hidden="true"
@@ -74,28 +90,41 @@ export default function Model() {
                   leaveFrom="opacity-100 translate-y-0 md:scale-100"
                   leaveTo="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
                 >
-                  <Dialog.Panel className="flex w-full transform text-left text-base transition md:my-8 md:max-w-2xl md:px-4 lg:max-w-4xl">
-                    <div className="relative flex w-full items-center overflow-hidden bg-white px-4 pb-8 pt-14 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8">
+                  <Dialog.Panel className="flex transform text-left text-base transition md:my-8 md:max-w-2xl md:px-4 lg:max-w-[66rem]">
+                    <div className="relative flex items-center overflow-hidden bg-white px-4 pb-8 pt-14 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8">
                       <button
                         type="button"
                         className="absolute right-4 top-4 text-gray-400 hover:text-gray-500 sm:right-6 sm:top-8 md:right-6 md:top-6 lg:right-8 lg:top-8"
-                        onClick={() => setOpen(false)}
+                        onClick={() => props.setOpen(false)}
                       >
                         <span className="sr-only">Close</span>
                         <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                       </button>
 
                       <div className="grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:items-center lg:gap-x-8">
-                        <div className="aspect-h-3 aspect-w-2 overflow-hidden rounded-lg bg-gray-100 sm:col-span-4 lg:col-span-5">
-                          <img
-                            src={product.imageSrc}
-                            alt={product.imageAlt}
-                            className="object-cover object-center"
-                          />
+                        <div className="aspect-h-3 h-full min-w-80 aspect-w-2 overflow-hidden rounded-sm bg-gray-100 sm:col-span-4 lg:col-span-5">
+                          <Swiper
+                            pagination={true}
+                            modules={[Pagination, Mousewheel]}
+                            mousewheel={true}
+                            className="mySwiper"
+                          >
+                            {productDetails &&
+                              productDetails?.images.map(
+                                (item: any, index: number) => (
+                                  <SwiperSlide key={index}>
+                                    <img
+                                      src={item?.url}
+                                      className="object-cover  object-center"
+                                    />
+                                  </SwiperSlide>
+                                )
+                              )}
+                          </Swiper>
                         </div>
                         <div className="sm:col-span-8 lg:col-span-7">
                           <h2 className="text-xl font-medium text-gray-900 sm:pr-12">
-                            {product.name}
+                            {productDetails?.title}
                           </h2>
 
                           <section
@@ -106,8 +135,8 @@ export default function Model() {
                               Product information
                             </h3>
 
-                            <p className="font-medium text-gray-900">
-                              {product.price}
+                            <p className="font-bold text-3xl text-gray-900">
+                              ₹{productDetails?.price}
                             </p>
 
                             {/* Reviews */}
@@ -163,104 +192,15 @@ export default function Model() {
 
                             <form>
                               {/* Color picker */}
-                              <div>
-                                <h4 className="text-sm font-medium text-gray-900">
-                                  Color
-                                </h4>
-
-                                <RadioGroup
-                                  value={selectedColor}
-                                  onChange={setSelectedColor}
-                                  className="mt-2"
-                                >
-                                  <RadioGroup.Label className="sr-only">
-                                    Choose a color
-                                  </RadioGroup.Label>
-                                  <div className="flex items-center space-x-3">
-                                    {product.colors.map((color: any) => (
-                                      <RadioGroup.Option
-                                        key={color.name}
-                                        value={color}
-                                        className={({ active, checked }) =>
-                                          classNames(
-                                            color.selectedColor,
-                                            active && checked
-                                              ? "ring ring-offset-1"
-                                              : "",
-                                            !active && checked ? "ring-2" : "",
-                                            "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none"
-                                          )
-                                        }
-                                      >
-                                        <RadioGroup.Label
-                                          as="span"
-                                          className="sr-only"
-                                        >
-                                          {color.name}
-                                        </RadioGroup.Label>
-                                        <span
-                                          aria-hidden="true"
-                                          className={classNames(
-                                            color.bgColor,
-                                            "h-8 w-8 rounded-full border border-black border-opacity-10"
-                                          )}
-                                        />
-                                      </RadioGroup.Option>
-                                    ))}
-                                  </div>
-                                </RadioGroup>
-                              </div>
+                              <ProductColorVariant
+                                color={productDetails?.color}
+                              />
 
                               {/* Size picker */}
                               <div className="mt-8">
-                                <div className="flex items-center justify-between">
-                                  <h4 className="text-sm font-medium text-gray-900">
-                                    Size
-                                  </h4>
-                                  <a
-                                    href="#"
-                                    className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                                  >
-                                    Size guide
-                                  </a>
-                                </div>
-
-                                <RadioGroup
-                                  value={selectedSize}
-                                  onChange={setSelectedSize}
-                                  className="mt-2"
-                                >
-                                  <RadioGroup.Label className="sr-only">
-                                    Choose a size
-                                  </RadioGroup.Label>
-                                  <div className="grid grid-cols-7 gap-2">
-                                    {product.sizes.map((size: any) => (
-                                      <RadioGroup.Option
-                                        key={size.name}
-                                        value={size}
-                                        className={({ active, checked }) =>
-                                          classNames(
-                                            size.inStock
-                                              ? "cursor-pointer focus:outline-none"
-                                              : "cursor-not-allowed opacity-25",
-                                            active
-                                              ? "ring-2 ring-indigo-500 ring-offset-2"
-                                              : "",
-                                            checked
-                                              ? "border-transparent bg-indigo-600 text-white hover:bg-indigo-700"
-                                              : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50",
-                                            "flex items-center justify-center rounded-md border py-3 px-3 text-sm font-medium uppercase sm:flex-1"
-                                          )
-                                        }
-                                        disabled={!size.inStock}
-                                      >
-                                        <RadioGroup.Label as="span">
-                                          {size.name}
-                                        </RadioGroup.Label>
-                                      </RadioGroup.Option>
-                                    ))}
-                                  </div>
-                                </RadioGroup>
+                                <ProductSizeVariant
+                                  size={productDetails?.size}
+                                />
                               </div>
 
                               <button
